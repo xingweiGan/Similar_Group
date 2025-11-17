@@ -1,0 +1,9 @@
+# Ignore local HF datasets / big artifacts
+embeddings/Dataset_with_embeddings/
+embeddings/Dataset_with_embeddings_pca/
+*.arrow
+
+# Python stuff
+__pycache__/
+*.pyc
+.venv/
