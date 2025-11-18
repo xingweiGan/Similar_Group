@@ -19,6 +19,8 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 32
 MAX_LENGTH = 512
 OUTPUT_DIR = "Dataset_with_embeddings"
+HF_REPO_ID = "xw1234gan/SPO_DATASET_WITH_EMBEDDDING"  # >>> changed: add your repo id here
+
 
 
 # ------------------------
@@ -95,15 +97,15 @@ def main():
         desc="Embedding prompts"
     )
 
-    print(f"\nSaving to disk at: {OUTPUT_DIR}")
-    ds_with_emb.save_to_disk(OUTPUT_DIR)
 
-    print("\nDone. Dataset info with new column:")
-    print(ds_with_emb)
-    print("Columns:", ds_with_emb.column_names)
-    print("First row keys:", ds_with_emb[0].keys())
-    print("Embedding length for row 0:",
-          len(ds_with_emb[0]["semantic_embedding"]))
+    # >>> changed: also save as Parquet
+    parquet_path = f"{OUTPUT_DIR}/train.parquet"
+    print(f"\nSaving Parquet file to: {parquet_path}")
+    ds_with_emb.to_parquet(parquet_path)
+
+    print(f"\nPushing dataset to Hugging Face Hub at: {HF_REPO_ID}")
+    ds_with_emb.push_to_hub(HF_REPO_ID)
+
 
 
 if __name__ == "__main__":

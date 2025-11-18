@@ -41,7 +41,7 @@ cd Similar_Group
 # 2. Run the setup once
 bash scripts/setup_env.sh
 
-# 3. Activate venv
+# 3. !!!!Activate venv
 source embeddings/.venv/bin/activate
 
 # 4. Login to Hugging Face (first time on this machine)

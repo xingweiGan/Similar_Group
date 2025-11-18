@@ -1,4 +1,3 @@
-cat > scripts/setup_env.sh << 'EOF'
 #!/usr/bin/env bash
 
 set -euo pipefail
@@ -48,10 +47,10 @@ uv pip install \
   scikit-learn \
   tqdm
 
+uv pip install hf_transfer
+uv pip install scikit-learn
+
 echo
 echo "[✓] Environment ready."
 echo "To use it now run:"
 echo "  source $VENV_DIR/bin/activate"
-EOF
-
-chmod +x scripts/setup_env.sh
