@@ -2,16 +2,17 @@ from datasets import load_dataset
 from sklearn.decomposition import PCA
 import numpy as np
 
-DATASET_ARROW_PATH = "hf://datasets/xw1234gan/Qwen3Emb_DAPO16k/data-00000-of-00001.arrow"
+# CHANGED: use dataset names instead of Arrow paths / local output dir
+DATASET_NAME_IN = "xw1234gan/SPO_DATASET_WITH_EMBEDDDING"          # input dataset on HF
+DATASET_NAME_OUT = "xw1234gan/SPO_DATASET_WITH_EMBEDDDING_PCA"     # output dataset on HF
 N_COMPONENTS = 10
-OUTPUT_DIR = "Dataset_with_embeddings_pca10"
 
 
 def main():
-    print(f"Loading Arrow file from Hugging Face: {DATASET_ARROW_PATH}")
+    # CHANGED: load from HF dataset directly
+    print(f"Loading dataset from Hugging Face: {DATASET_NAME_IN}")
     ds = load_dataset(
-        "arrow",
-        data_files={"train": DATASET_ARROW_PATH},
+        DATASET_NAME_IN,
         split="train",
     )
     print(ds)
@@ -26,19 +27,18 @@ def main():
     X_pca = pca.fit_transform(X).astype("float32")
     print("Compressed embedding shape:", X_pca.shape)
 
-    col_name = "semantic_embedding_pca10"
+    # CHANGED: column name you requested
+    col_name = "semantic_embedding_PCA"
     print(f"\nAdding new column '{col_name}' to dataset...")
     ds_pca = ds.add_column(col_name, X_pca.tolist())
 
-    print(f"\nSaving compressed dataset to: {OUTPUT_DIR}")
-    ds_pca.save_to_disk(OUTPUT_DIR)
+    # CHANGED: instead of save_to_disk, push to Hugging Face Hub
+    print(f"\nPushing PCA-compressed dataset to Hugging Face Hub as: {DATASET_NAME_OUT}")
+    ds_pca.push_to_hub(DATASET_NAME_OUT)
 
     print("\nDone.")
-    print(ds_pca)
-    print("Columns:", ds_pca.column_names)
-    first = ds_pca[0]
-    print(f"Length of {col_name} for first row:", len(first[col_name]))
 
+    
 
 if __name__ == "__main__":
     main()
